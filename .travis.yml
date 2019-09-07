@@ -21,7 +21,14 @@ before_script:
   - ROOT_OF_REPO=$(pwd)
 
 script:
+  # Build project
   - mkdir build && cd build
   - cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$PROJ_INSTALL_DIR
   - make
   - make install
+  # Build/Package minimalist example
+  - cd examples/minimalist
+  - mkdir build && cd build
+  - cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$PROJ_INSTALL_DIR -DCMAKE_PREFIX_PATH=$PROJ_INSTALL_DIR
+  - make
+  - make aws-lambda-package-minimalist
