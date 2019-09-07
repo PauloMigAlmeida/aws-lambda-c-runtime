@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#ifndef AWS_LAMBDA_C_RUNTIME_SERVICE_LOGIC_H
+#define AWS_LAMBDA_C_RUNTIME_SERVICE_LOGIC_H
 #include "aws-lambda/c-runtime/runtime.h"
 #include "aws-lambda/http/service-integration.h"
 
@@ -24,3 +26,5 @@ void service_logic_cleanup(void);
 invocation_request *service_logic_get_next(void);
 
 void service_logic_post_result(char *request_id, invocation_response *response);
+
+#endif //AWS_LAMBDA_C_RUNTIME_SERVICE_LOGIC_H

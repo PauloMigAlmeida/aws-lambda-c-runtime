@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 #pragma once
+#ifndef AWS_LAMBDA_C_RUNTIME_SERVICE_INTEGRATION_H
+#define AWS_LAMBDA_C_RUNTIME_SERVICE_INTEGRATION_H
 
 #include <stdbool.h>
 #include "aws-lambda/c-runtime/runtime.h"
@@ -36,3 +38,5 @@ void service_integration_cleanup(void);
 next_outcome request_get_next(void);
 
 post_result_outcome request_post_result(char *request_id, invocation_response *response);
+
+#endif

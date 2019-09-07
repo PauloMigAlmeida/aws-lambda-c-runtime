@@ -15,6 +15,8 @@
  */
 
 #pragma once
+#ifndef AWS_LAMBDA_C_RUNTIME_RUNTIME_H
+#define AWS_LAMBDA_C_RUNTIME_RUNTIME_H
 
 #include <stdbool.h>
 
@@ -83,3 +85,5 @@ invocation_response failure(char *error_message, char *error_type);
 
 // Entry method
 void run_handler(invocation_response (*handler)(invocation_request request));
+
+#endif //AWS_LAMBDA_C_RUNTIME_RUNTIME_H

@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+#ifndef AWS_LAMBDA_C_RUNTIME_VERSION_H
+#define AWS_LAMBDA_C_RUNTIME_VERSION_H
+
 /**
  * Returns the major component of the library version.
  */
@@ -33,3 +36,5 @@ unsigned char get_version_patch(void);
  * Returns the semantic version of the library in the form Major.Minor.Patch
  */
 char const *get_version(void);
+
+#endif //AWS_LAMBDA_C_RUNTIME_VERSION_H

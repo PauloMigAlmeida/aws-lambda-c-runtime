@@ -1,3 +1,6 @@
+#ifndef AWS_LAMBDA_EXT_STR_BUILDER_H
+#define AWS_LAMBDA_EXT_STR_BUILDER_H
+
 #include <stddef.h>
 
 /*! Implementation extracted from https://nachtimwald.com/2017/02/26/efficient-c-string-builder/
@@ -96,3 +99,5 @@ const char *str_builder_peek(const str_builder_t *sb);
  * return Copy of the internal string data.
  */
 char *str_builder_dump(const str_builder_t *sb, size_t *len);
+
+#endif //AWS_LAMBDA_EXT_STR_BUILDER_H
