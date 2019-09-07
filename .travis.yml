@@ -1,0 +1,27 @@
+language: c
+dist: bionic
+
+compiler:
+  - clang
+  - gcc
+
+git:
+  depth: 1
+  quiet: true
+
+env:
+  - PROJ_INSTALL_DIR=$HOME/install
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y libcurl4-openssl-dev
+
+before_script:
+  - mkdir -p $PROJ_INSTALL_DIR
+  - ROOT_OF_REPO=$(pwd)
+
+script:
+  - mkdir build && cd build
+  - cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$PROJ_INSTALL_DIR
+  - make
+  - make install

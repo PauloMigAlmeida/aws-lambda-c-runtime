@@ -17,10 +17,7 @@
 #include "aws-lambda/c-runtime/runtime.h"
 
 invocation_response my_handler(invocation_request request){
-    if(rand() == 42)
-        return failure("Something went wrong","Application-Error");
-    else
-        return success("All good","text/plain");
+    return success("Hello World from AWS Lambda C Runtime","text/plain");
 }
 
 int main(void){
