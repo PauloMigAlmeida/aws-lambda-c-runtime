@@ -58,6 +58,11 @@ extern int hashmap_put(map_t in, char* key, any_t value);
 extern int hashmap_get(map_t in, char* key, any_t *arg);
 
 /*
+ * Check if a key exists. Return MAP_OK or MAP_MISSING
+ */
+extern int hashmap_has_key(map_t in, char* key);
+
+/*
  * Remove an element from the hashmap. Return MAP_OK or MAP_MISSING.
  */
 extern int hashmap_remove(map_t in, char* key);

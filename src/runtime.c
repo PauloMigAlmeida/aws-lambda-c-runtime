@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+/** Prototypes */
+void cleanup(invocation_request *request);
+
 /**
  * Create a successful invocation response with the given payload and content-type.
  */
@@ -22,11 +25,11 @@ invocation_response success(char* payload, char* content_type){
  * The content-type is always set to application/json in this case.
  */
 invocation_response failure(char* error_message, char* error_type){
-    char* template = "{\"errorMessage\":\"%s\",\"errorType\":\"%s\", \"stackTrace\":[]})";
+    char* template = "{\"errorMessage\":\"%s\",\"errorType\":\"%s\", \"stackTrace\":[]}";
 
     invocation_response r;
     r.success = false;
-    r.content_type = "application/json";
+    r.content_type = "application/vnd.aws.lambda.error+json";
 
     char *tmp_str = malloc(strlen(template) + strlen(error_message) + strlen(error_type) + 1);
     sprintf(tmp_str, template, error_message, error_type);
@@ -41,20 +44,40 @@ void run_handler(invocation_response (*handler)(invocation_request request)){
 
     service_logic_setup();
 
-    invocation_request *req = service_logic_get_next();
-    if(req != NULL){
-        printf("Invoking user handler\n");
-        invocation_response res =  handler(*req);
-        printf("Invoking user handler completed.\n");
-        printf("\tresponse payload: %s\n", res.payload);
+    invocation_request *req = NULL;
+    while((req = service_logic_get_next()) != NULL){
+        if(req){
+            printf("Invoking user handler\n");
+            invocation_response res =  handler(*req);
+            printf("Invoking user handler completed.\n");
+            printf("\tresponse payload: %s\n", res.payload);
 
-        // freeing up dynamic allocated resources
-        if(!res.success)
-            free(res.payload); // failure callbacks allocates a dynamic string
-        free(req->payload);
-        free(req);
+            service_logic_post_result(req->request_id, &res);
+
+            // freeing up dynamic allocated resources
+            if(!res.success)
+                free(res.payload); // failure callbacks allocates a dynamic string
+            cleanup(req);
+        }
     }
 
     service_logic_cleanup();
 
+}
+
+void cleanup(invocation_request *request){
+    // freeing up dynamic allocated resources
+    if(request->payload)
+        free(request->payload);
+    if(request->request_id)
+        free(request->request_id);
+    if(request->xray_trace_id)
+        free(request->xray_trace_id);
+    if(request->client_context)
+        free(request->client_context);
+    if(request->cognito_identity)
+        free(request->cognito_identity);
+    if(request->function_arn)
+        free(request->function_arn);
+    free(request);
 }

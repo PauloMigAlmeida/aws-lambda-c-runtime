@@ -9,7 +9,13 @@ typedef struct {
     int res_code; // TODO ver se vou precisar de fato desse campo
 } next_outcome;
 
-void service_integration_init();
-void service_integration_cleanup();
+typedef struct {
+    bool success;
+    int res_code;
+} post_result_outcome;
 
-next_outcome request_get_next();
+void service_integration_init(void);
+void service_integration_cleanup(void);
+
+next_outcome request_get_next(void);
+post_result_outcome request_post_result(char *request_id, invocation_response* response);
