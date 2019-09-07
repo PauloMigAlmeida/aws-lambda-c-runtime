@@ -14,7 +14,7 @@ env:
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install -y libcurl-dev
+  - sudo apt-get install -y libcurl4-openssl-dev
 
 before_script:
   - mkdir -p $PROJ_INSTALL_DIR
