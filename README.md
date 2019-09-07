@@ -5,8 +5,7 @@
 C implementation of the lambda runtime API. 
 
 ## Disclaimer
-I wrote this project aiming for putting into practice what I have been learning while reading C programming books. Most
-implementation details of this project is based on Marco Magdy's nice work on the [awslabs/aws-lambda-cpp](https://github.com/awslabs/aws-lambda-cpp)
+Most implementation details of this project is based on Marco Magdy's nice work on the [awslabs/aws-lambda-cpp](https://github.com/awslabs/aws-lambda-cpp)
 repository. 
 
 Documentation and packaging mechanisms have been either adapted,ported or copied since I agree with most of the development
