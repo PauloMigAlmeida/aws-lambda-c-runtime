@@ -36,7 +36,6 @@ configure_file(
 install(FILES
         "include/aws-lambda/ext/string-builder.h"
         "include/aws-lambda/ext/hashmap.h"
-        "include/aws-lambda/http/jsmh.h"
         "include/aws-lambda/http/response.h"
         "include/aws-lambda/http/service-integration.h"
         "include/aws-lambda/c-runtime/runtime.h"

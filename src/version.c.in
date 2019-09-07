@@ -1,21 +1,21 @@
 /* clang-format off */
-unsigned get_version_major()
+unsigned get_version_major(void)
 {
     return @PROJECT_VERSION_MAJOR@;
 }
 
-unsigned get_version_minor()
+unsigned get_version_minor(void)
 {
     return @PROJECT_VERSION_MINOR@;
 }
 
-unsigned get_version_patch()
+unsigned get_version_patch(void)
 {
     return @PROJECT_VERSION_PATCH@;
 }
 /* clang-format on */
 
-char const* get_version()
+char const* get_version(void)
 {
     return "@PROJECT_VERSION@";
 }

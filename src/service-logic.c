@@ -7,11 +7,11 @@
 #define MAX_SERVICE_LOGIC_RETRIES 3
 
 /* Implementations */
-void service_logic_setup() {
+void service_logic_setup(void) {
     service_integration_init();
 }
 
-void service_logic_cleanup(){
+void service_logic_cleanup(void){
     service_integration_cleanup();
 }
 
