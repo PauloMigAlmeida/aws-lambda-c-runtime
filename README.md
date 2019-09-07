@@ -52,7 +52,7 @@ target_link_libraries(${PROJECT_NAME} aws-lambda-c-runtime)
 aws_lambda_package_target(${PROJECT_NAME})
 ```
 
-And here is how a sample `main.cpp` would look like:
+And here is how a sample `main.c` would look like:
 ```c
 #include "aws-lambda/c-runtime/runtime.h"
 
