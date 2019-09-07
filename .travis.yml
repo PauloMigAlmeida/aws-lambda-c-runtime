@@ -27,8 +27,8 @@ script:
   - make
   - make install
   # Build/Package minimalist example
-  - cd $PROJ_INSTALL_DIR/examples/minimalist
+  - cd $ROOT_OF_REPO/examples/minimalist
   - mkdir build && cd build
-  - cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$PROJ_INSTALL_DIR -DCMAKE_PREFIX_PATH=$PROJ_INSTALL_DIR
+  - cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=$PROJ_INSTALL_DIR
   - make
   - make aws-lambda-package-minimalist
