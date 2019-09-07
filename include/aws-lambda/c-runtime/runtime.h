@@ -1,59 +1,67 @@
+/*
+ * Copyright (2019) - Paulo Miguel Almeida
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 #pragma once
+
 #include <stdbool.h>
 
-typedef struct{
+typedef struct {
     /**
      * The user's payload represented as a UTF-8 string.
      */
-    char* payload;
+    char *payload;
 
     /**
      * An identifier unique to the current invocation.
      */
-    char* request_id;
+    char *request_id;
 
     /**
      * X-Ray tracing ID of the current invocation.
      */
-    char* xray_trace_id;
+    char *xray_trace_id;
 
     /**
      * Information about the client application and device when invoked through the AWS Mobile SDK.
      */
-    char* client_context;
+    char *client_context;
 
     /**
      * Information about the Amazon Cognito identity provider when invoked through the AWS Mobile SDK.
      */
-    char* cognito_identity;
+    char *cognito_identity;
 
     /**
      * The ARN requested. This can be different in each invoke that executes the same version.
      */
-    char* function_arn;
+    char *function_arn;
 
-//    /**
-//     * Function execution deadline counted in milliseconds since the Unix epoch.
-//     */
-//    std::chrono::time_point<std::chrono::system_clock> deadline;
-
-//    /**
-//     * The number of milliseconds left before lambda terminates the current execution.
-//     */
-//    inline std::chrono::milliseconds get_time_remaining() const;
 } invocation_request;
 
-typedef struct{
+typedef struct {
     /**
      * The output of the function which is sent to the lambda caller.
      */
-    char* payload;
+    char *payload;
 
     /**
      * The MIME type of the payload.
      * This is always set to 'application/json' in unsuccessful invocations.
      */
-    char* content_type;
+    char *content_type;
 
     /**
      * Flag to distinguish if the contents are for successful or unsuccessful invocations.
@@ -65,13 +73,13 @@ typedef struct{
 /**
  * Create a successful invocation response with the given payload and content-type.
  */
-invocation_response success(char* payload, char* content_type);
+invocation_response success(char *payload, char *content_type);
 
 /**
  * Create a failure response with the given error message and error type.
  * The content-type is always set to application/json in this case.
  */
-invocation_response failure(char* error_message, char* error_type);
+invocation_response failure(char *error_message, char *error_type);
 
 // Entry method
 void run_handler(invocation_response (*handler)(invocation_request request));

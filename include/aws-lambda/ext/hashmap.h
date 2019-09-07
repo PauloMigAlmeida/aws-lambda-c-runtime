@@ -5,6 +5,8 @@
  *
  * Modified by Pete Warden to fix a serious performance problem, support strings as keys
  * and removed thread synchronization - http://petewarden.typepad.com
+ *
+ * Modified by Paulo Almeida to modify the hashmap_free behaviour to my needs.
  */
 #ifndef __HASHMAP_H__
 #define __HASHMAP_H__
