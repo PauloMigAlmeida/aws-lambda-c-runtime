@@ -16,6 +16,7 @@
 
 #ifndef AWS_LAMBDA_C_RUNTIME_SERVICE_LOGIC_H
 #define AWS_LAMBDA_C_RUNTIME_SERVICE_LOGIC_H
+
 #include "aws-lambda/c-runtime/runtime.h"
 #include "aws-lambda/http/service-integration.h"
 
