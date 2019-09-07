@@ -15,23 +15,23 @@ static inline char *trim(char *src);
 
 static inline char *strlwr(char *str);
 
-void http_response_init() {
+void http_response_init(void) {
     body_sb = str_builder_create();
     header_map = hashmap_new();
 }
 
-void http_response_cleanup() {
+void http_response_cleanup(void) {
     str_builder_destroy(body_sb);
     hashmap_free(header_map);
 }
 
-void http_response_clear() {
+void http_response_clear(void) {
     str_builder_clear(body_sb);
     hashmap_free(header_map);
     header_map = hashmap_new();
 }
 
-const char *http_response_get_content() {
+const char *http_response_get_content(void) {
     return str_builder_peek(body_sb);
 }
 

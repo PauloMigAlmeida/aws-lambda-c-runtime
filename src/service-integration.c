@@ -9,7 +9,7 @@
 
 static CURL *curl;
 static char base_url[256];
-static char *next_endpoint, *init_error_endpoint, *result_endpoint;
+static char *next_endpoint, *result_endpoint;
 
 /* Prototypes */
 static inline char *build_url(char *b_url, char *path);
@@ -21,7 +21,6 @@ void service_integration_init(void) {
         printf("LAMBDA_SERVER_ADDRESS defined in environment as: %s\n", env);
         strcat(base_url, env);
     }
-    init_error_endpoint = build_url(base_url, "/2018-06-01/runtime/init/error");
     next_endpoint = build_url(base_url, "/2018-06-01/runtime/invocation/next");
     result_endpoint = build_url(base_url, "/2018-06-01/runtime/invocation/");
 
@@ -32,7 +31,6 @@ void service_integration_init(void) {
 void service_integration_cleanup(void) {
     curl_global_cleanup();
     free(next_endpoint);
-    free(init_error_endpoint);
     free(result_endpoint);
     http_response_cleanup();
 }

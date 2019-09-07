@@ -6,7 +6,7 @@
 typedef struct {
     bool success;
     invocation_request request;
-    int res_code; // TODO ver se vou precisar de fato desse campo
+    int res_code;
 } next_outcome;
 
 typedef struct {

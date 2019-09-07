@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.12)
 project(aws-lambda-c-runtime
         VERSION 0.0.1
         LANGUAGES C)
@@ -36,7 +36,6 @@ configure_file(
 install(FILES
         "include/aws-lambda/ext/string-builder.h"
         "include/aws-lambda/ext/hashmap.h"
-        "include/aws-lambda/http/jsmh.h"
         "include/aws-lambda/http/response.h"
         "include/aws-lambda/http/service-integration.h"
         "include/aws-lambda/c-runtime/runtime.h"
