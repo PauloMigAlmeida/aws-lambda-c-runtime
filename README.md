@@ -1,5 +1,6 @@
 [![GitHub](https://img.shields.io/github/license/PauloMigAlmeida/aws-lambda-c-runtime.svg)](https://github.com/PauloMigAlmeida/aws-lambda-c-runtime/blob/master/LICENSE)
 [![Build Status](https://travis-ci.com/PauloMigAlmeida/aws-lambda-c-runtime.svg?branch=master)](https://travis-ci.com/PauloMigAlmeida/aws-lambda-c-runtime)
+[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/PauloMigAlmeida/aws-lambda-c-runtime.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/PauloMigAlmeida/aws-lambda-c-runtime/context:cpp)
 
 ## AWS Lambda C Runtime
 
