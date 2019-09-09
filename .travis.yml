@@ -23,12 +23,26 @@ before_script:
 script:
   # Build project
   - mkdir build && cd build
-  - cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$PROJ_INSTALL_DIR
-  - make
+  - cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PROJ_INSTALL_DIR
+  - make -j$(nproc)
   - make install
   # Build/Package minimalist example
   - cd $ROOT_OF_REPO/examples/minimalist
   - mkdir build && cd build
-  - cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=$PROJ_INSTALL_DIR
-  - make
+  - cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PROJ_INSTALL_DIR
+  - make -j$(nproc)
   - make aws-lambda-package-minimalist
+  # Build/Package s3 example
+  - cd $ROOT_OF_REPO/examples/s3
+  - mkdir tmp_dep && cd tmp_dep
+  - git clone https://github.com/aws/aws-sdk-cpp.git --depth=1
+  - cd aws-sdk-cpp
+  - mkdir build && cd build
+  - cmake .. -DBUILD_ONLY="s3" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCUSTOM_MEMORY_MANAGEMENT=OFF -DCMAKE_INSTALL_PREFIX=~/install -DENABLE_UNITY_BUILD=ON
+  - make -j$(nproc) && make install
+  - cd $ROOT_OF_REPO/examples/s3
+  - rm -rf tmp_dep
+  - mkdir build && cd build
+  - cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PROJ_INSTALL_DIR
+  - make -j$(nproc)
+  - make aws-lambda-package-s3-list-buckets

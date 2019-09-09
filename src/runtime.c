@@ -23,7 +23,7 @@
 #include <string.h>
 
 /** Prototypes */
-void cleanup(invocation_request *request);
+void cleanup(invocation_request *request, invocation_response *response);
 
 /**
  * Create a successful invocation response with the given payload and content-type.
@@ -69,11 +69,7 @@ void run_handler(invocation_response (*handler)(invocation_request request)){
             printf("\tresponse payload: %s\n", res.payload);
 
             service_logic_post_result(req->request_id, &res);
-
-            // freeing up dynamic allocated resources
-            if(!res.success)
-                free(res.payload); // failure callbacks allocates a dynamic string
-            cleanup(req);
+            cleanup(req, &res);
         }
     }
 
@@ -81,7 +77,7 @@ void run_handler(invocation_response (*handler)(invocation_request request)){
 
 }
 
-void cleanup(invocation_request *request){
+void cleanup(invocation_request *request, invocation_response *response){
     // freeing up dynamic allocated resources
     if(request->payload)
         free(request->payload);
@@ -96,4 +92,9 @@ void cleanup(invocation_request *request){
     if(request->function_arn)
         free(request->function_arn);
     free(request);
+
+    if(response->payload)
+        free(response->payload);
+    if(response->content_type)
+        free(response->content_type);
 }
