@@ -38,7 +38,7 @@ script:
   - git clone https://github.com/aws/aws-sdk-cpp.git --depth=1
   - cd aws-sdk-cpp
   - mkdir build && cd build
-  - cmake .. -DBUILD_ONLY="s3" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCUSTOM_MEMORY_MANAGEMENT=OFF -DCMAKE_INSTALL_PREFIX=~/install -DENABLE_UNITY_BUILD=ON
+  - cmake .. -DBUILD_ONLY="s3" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCUSTOM_MEMORY_MANAGEMENT=OFF -DCMAKE_INSTALL_PREFIX=~/install -DENABLE_UNITY_BUILD=ON -DENABLE_TESTING=OFF -DAUTORUN_UNIT_TESTS=OFF
   - make -j$(nproc) && make install
   - cd $ROOT_OF_REPO/examples/s3
   - rm -rf tmp_dep
