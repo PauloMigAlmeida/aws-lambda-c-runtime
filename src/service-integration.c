@@ -178,6 +178,8 @@ post_result_outcome request_post_result(char *request_id, invocation_response *r
         char *content_type_h = malloc(strlen(HTTP_HEADER_CONTENT_TYPE) + strlen(response->content_type) + 1);
         strcpy(content_type_h, HTTP_HEADER_CONTENT_TYPE);
         strcat(content_type_h, response->content_type);
+        printf("content_type_h -> %s", content_type_h);
+
         headers = curl_slist_append(headers, content_type_h);
         headers = curl_slist_append(headers, get_user_agent_header());
 
