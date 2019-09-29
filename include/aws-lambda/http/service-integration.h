@@ -21,7 +21,7 @@
 
 typedef struct {
     bool success;
-    invocation_request request;
+    invocation_request* request;
     int res_code;
 } next_outcome;
 
@@ -36,6 +36,6 @@ void service_integration_cleanup(void);
 
 next_outcome request_get_next(void);
 
-post_result_outcome request_post_result(char *request_id, invocation_response *response);
+post_result_outcome request_post_result(invocation_request *request, invocation_response *response);
 
 #endif

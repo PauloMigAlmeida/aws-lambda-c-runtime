@@ -15,9 +15,6 @@
  */
 
 #include "aws-lambda/http/service-integration.h"
-#include "aws-lambda/c-runtime/utils.h"
-
-#include <stdlib.h>
 #include <stdio.h>
 
 #define MAX_SERVICE_LOGIC_RETRIES 3
@@ -40,9 +37,7 @@ bool service_logic_get_next(invocation_request **req) {
             printf("HTTP request was not successful. HTTP response code: %d. Retrying..\n", next_outcome.res_code);
             retries++;
         } else {
-            *req = malloc(sizeof(invocation_request));
-            FAIL_IF(!req)
-            **req = next_outcome.request;
+            *req = next_outcome.request;
             return true;
         }
     }
@@ -58,7 +53,7 @@ void service_logic_post_result(invocation_request *request, invocation_response 
     result_outcome.success = false;
 
     while (retries < MAX_SERVICE_LOGIC_RETRIES) {
-        result_outcome = request_post_result(request->request_id, response);
+        result_outcome = request_post_result(request, response);
         if (!result_outcome.success) {
             printf("HTTP request was not successful. HTTP response code: %d. Retrying..\n", result_outcome.res_code);
             retries++;
