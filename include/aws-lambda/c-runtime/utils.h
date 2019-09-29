@@ -21,23 +21,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define FAIL_IF(x)						            \
-if ((x)) {						                    \
-    fprintf(stderr,					                \
-    "[FAIL] Test FAILED on line %d\n", __LINE__);	\
-    exit(1);					                    \
-}							                        \
+#define FAIL_IF(x)                                  \
+if ((x)) {                                          \
+    fprintf(stderr,                                 \
+    "[FAIL] Test FAILED on line %d\n", __LINE__);   \
+    exit(1);                                        \
+}                                                   \
 
 void saferFree(void **pp);
 #define SAFE_FREE(p) saferFree((void**)&(p))
 
 #define SAFE_STRDUP(target, content)                                \
 target = strdup(content);                                           \
-if ((!target)) {						                            \
-    fprintf(stderr,					                                \
-    "[FAIL] Error when duplicating str on line %d\n", __LINE__);	\
-    exit(1);					                                    \
-}   							                                    \
+if ((!target)) {                                                    \
+    fprintf(stderr,                                                 \
+    "[FAIL] Error when duplicating str on line %d\n", __LINE__);    \
+    exit(1);                                                        \
+}                                                                   \
 
 
 #endif //AWS_LAMBDA_C_RUNTIME_UTILS_H

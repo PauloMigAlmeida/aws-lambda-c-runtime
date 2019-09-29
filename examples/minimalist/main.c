@@ -16,8 +16,9 @@
 
 #include "aws-lambda/c-runtime/runtime.h"
 
-invocation_response my_handler(invocation_request request){
-    return success("Hello World from AWS Lambda C Runtime","text/plain");
+void my_handler(invocation_request *request, invocation_response **response){
+    *response = success("Hello World from AWS Lambda C Runtime","text/plain");
+//    *response = failure("Hello World from AWS Lambda C Runtime","Application_Error");
 }
 
 int main(void){
