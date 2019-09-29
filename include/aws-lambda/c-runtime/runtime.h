@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-#pragma once
 #ifndef AWS_LAMBDA_C_RUNTIME_RUNTIME_H
 #define AWS_LAMBDA_C_RUNTIME_RUNTIME_H
 
@@ -71,19 +70,23 @@ typedef struct {
     bool success;
 } invocation_response;
 
+/**
+ * Define a lesser crypt way of defining the pointer of the handler function
+ */
+typedef void (*handler_ptr)(invocation_request*, invocation_response**);
 
 /**
  * Create a successful invocation response with the given payload and content-type.
  */
-invocation_response success(char *payload, char *content_type);
+invocation_response* success(char *payload, char *content_type);
 
 /**
  * Create a failure response with the given error message and error type.
  * The content-type is always set to application/json in this case.
  */
-invocation_response failure(char *error_message, char *error_type);
+invocation_response* failure(char *error_message, char *error_type);
 
 // Entry method
-void run_handler(invocation_response (*handler)(invocation_request request));
+void run_handler(handler_ptr handler);
 
 #endif //AWS_LAMBDA_C_RUNTIME_RUNTIME_H

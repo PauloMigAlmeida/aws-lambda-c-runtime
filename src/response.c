@@ -17,6 +17,7 @@
 #include "aws-lambda/http/response.h"
 #include "aws-lambda/ext/string-builder.h"
 #include "aws-lambda/ext/hashmap.h"
+#include "aws-lambda/c-runtime/utils.h"
 #include <string.h>
 #include <ctype.h>
 #include <assert.h>
@@ -53,22 +54,24 @@ const char *http_response_get_content(void) {
 
 char *get_header(const char *header) {
     char *h_tmp = malloc(strlen(header) + 1);
+    FAIL_IF(!h_tmp)
     strcpy(h_tmp, header);
 
     char *value = NULL;
     assert(hashmap_get(header_map, h_tmp, (void **) &value) == MAP_OK);
 
-    free(h_tmp);
+    SAFE_FREE(h_tmp);
     return value;
 }
 
 bool has_header(const char *header) {
     char *h_tmp = malloc(strlen(header) + 1);
+    FAIL_IF(!h_tmp)
     strcpy(h_tmp, header);
 
     int ret = hashmap_has_key(header_map, h_tmp);
 
-    free(h_tmp);
+    SAFE_FREE(h_tmp);
     return ret == MAP_OK;
 }
 
@@ -102,9 +105,9 @@ size_t write_header_callback(char *ptr, size_t size, size_t nmemb, void *userdat
         int error = hashmap_put(header_map, header_name, header_value);
         assert(error == MAP_OK);
     } else
-        free(header_name); // free dynamic allocation that didn't match the previous if stmt.
+        SAFE_FREE(header_name); // free dynamic allocation that didn't match the previous if stmt.
 
-    free(raw_header);
+    SAFE_FREE(raw_header);
     return nmemb;
 }
 
@@ -146,8 +149,9 @@ static inline char *trim(char *src) {
         p = src + i;
         if (!is_char_trimmable(*p)) {
             ret = malloc(strlen(p) + 1);
+            FAIL_IF(!ret)
             strcpy(ret, p);
-            free(src);
+            SAFE_FREE(src);
             break;
         }
     }

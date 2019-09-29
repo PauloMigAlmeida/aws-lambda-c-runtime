@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include "aws-lambda/c-runtime/utils.h"
 #include "aws-lambda/http/service-integration.h"
 #include "aws-lambda/http/response.h"
 #include <stdlib.h>
@@ -46,8 +47,8 @@ void service_integration_init(void) {
 
 void service_integration_cleanup(void) {
     curl_global_cleanup();
-    free(next_endpoint);
-    free(result_endpoint);
+    SAFE_FREE(next_endpoint);
+    SAFE_FREE(result_endpoint);
     http_response_cleanup();
 }
 
@@ -111,29 +112,29 @@ next_outcome request_get_next(void) {
             curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &resp_code);
             ret.res_code = (int) resp_code;
 
-            ret.request.payload = strdup(http_response_get_content());
+            SAFE_STRDUP(ret.request.payload, http_response_get_content())
             if (has_header(REQUEST_ID_HEADER)) {
-                ret.request.request_id = strdup(get_header(REQUEST_ID_HEADER));
+                SAFE_STRDUP(ret.request.request_id, get_header(REQUEST_ID_HEADER))
                 printf("ret.request.request_id: %s\n", ret.request.request_id);
             }
 
             if (has_header(TRACE_ID_HEADER)) {
-                ret.request.xray_trace_id = strdup(get_header(TRACE_ID_HEADER));
+                SAFE_STRDUP(ret.request.xray_trace_id, get_header(TRACE_ID_HEADER))
                 printf("ret.request.xray_trace_id: %s\n", ret.request.xray_trace_id);
             }
 
             if (has_header(CLIENT_CONTEXT_HEADER)) {
-                ret.request.client_context = strdup(get_header(CLIENT_CONTEXT_HEADER));
+                SAFE_STRDUP(ret.request.client_context, get_header(CLIENT_CONTEXT_HEADER))
                 printf("ret.request.client_context: %s\n", ret.request.client_context);
             }
 
             if (has_header(COGNITO_IDENTITY_HEADER)) {
-                ret.request.cognito_identity = strdup(get_header(COGNITO_IDENTITY_HEADER));
+                SAFE_STRDUP(ret.request.cognito_identity, get_header(COGNITO_IDENTITY_HEADER))
                 printf("ret.request.cognito_identity: %s\n", ret.request.cognito_identity);
             }
 
             if (has_header(FUNCTION_ARN_HEADER)) {
-                ret.request.function_arn = strdup(get_header(FUNCTION_ARN_HEADER));
+                SAFE_STRDUP(ret.request.function_arn, get_header(FUNCTION_ARN_HEADER))
                 printf("ret.request.function_arn: %s\n", ret.request.function_arn);
             }
 
@@ -166,6 +167,7 @@ post_result_outcome request_post_result(char *request_id, invocation_response *r
     if (curl) {
         // this ought to be enough space to accommodate request_id and the last url segment (including \0).
         char *request_url = malloc(strlen(result_endpoint) + 128);
+        FAIL_IF(!request_url)
         strcpy(request_url, result_endpoint);
         strcat(request_url, request_id);
         strcat(request_url, (response->success) ? "/response" : "/error");
@@ -176,6 +178,7 @@ post_result_outcome request_post_result(char *request_id, invocation_response *r
         struct curl_slist *headers = NULL;
 
         char *content_type_h = malloc(strlen(HTTP_HEADER_CONTENT_TYPE) + strlen(response->content_type) + 1);
+        FAIL_IF(!content_type_h)
         strcpy(content_type_h, HTTP_HEADER_CONTENT_TYPE);
         strcat(content_type_h, response->content_type);
         printf("content_type_h -> %s", content_type_h);
@@ -185,9 +188,11 @@ post_result_outcome request_post_result(char *request_id, invocation_response *r
 
         printf("calculating content length... %lu bytes\n", strlen(response->payload));
         char *content_length_v = malloc(16); //Lambda payload in bytes -> 7 digits + 1 null char + future proof fat
+        FAIL_IF(!content_length_v)
         sprintf(content_length_v, "%lu", strlen(response->payload));
 
         char *content_length_h = malloc(strlen(HTTP_HEADER_CONTENT_LENGTH) + strlen(content_length_v) + 1);
+        FAIL_IF(!content_length_h)
         sprintf(content_length_h, "%s%s", HTTP_HEADER_CONTENT_LENGTH, content_length_v);
 
         headers = curl_slist_append(headers, content_length_h);
@@ -203,20 +208,20 @@ post_result_outcome request_post_result(char *request_id, invocation_response *r
 
         if (curl_code != CURLE_OK) {
             printf("CURL returned error code %d - %s\n", curl_code, curl_easy_strerror(curl_code));
-        }else{
+        } else {
             printf("CURL response body: %s\n", http_response_get_content());
 
             long http_response_code;
             curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_response_code);
-            ret.res_code = (int)http_response_code;
+            ret.res_code = (int) http_response_code;
             ret.success = (http_response_code >= 200 && http_response_code <= 299);
         }
 
         curl_easy_cleanup(curl);
-        free(request_url);
-        free(content_type_h);
-        free(content_length_h);
-        free(content_length_v);
+        SAFE_FREE(request_url);
+        SAFE_FREE(content_type_h);
+        SAFE_FREE(content_length_h);
+        SAFE_FREE(content_length_v);
     }
     return ret;
 }
@@ -224,6 +229,7 @@ post_result_outcome request_post_result(char *request_id, invocation_response *r
 /* Utility functions */
 static inline char *build_url(char *b_url, char *path) {
     char *dest = malloc(strlen(b_url) + strlen(path) + 1);
+    FAIL_IF(!dest)
     strcpy(dest, b_url);
     strcat(dest, path);
     return dest;

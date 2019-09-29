@@ -17,22 +17,24 @@
 #include "aws-lambda/c-runtime/runtime.h"
 #include "aws-lambda/c-runtime/version.h"
 #include "aws-lambda/c-runtime/service-logic.h"
+#include "aws-lambda/c-runtime/utils.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 /** Prototypes */
-void cleanup(invocation_request *request, invocation_response *response);
+void cleanup(invocation_request **request, invocation_response **response);
 
 /**
  * Create a successful invocation response with the given payload and content-type.
  */
-invocation_response success(char* payload, char* content_type){
-    invocation_response r;
-    r.success = true;
-    r.content_type = content_type;
-    r.payload = payload;
+invocation_response* success(char* payload, char* content_type){
+    invocation_response* r = malloc(sizeof(invocation_response));
+    FAIL_IF(!r)
+    r->success = true;
+    SAFE_STRDUP(r->content_type, content_type)
+    SAFE_STRDUP(r->payload, payload)
     return r;
 }
 
@@ -40,61 +42,55 @@ invocation_response success(char* payload, char* content_type){
  * Create a failure response with the given error message and error type.
  * The content-type is always set to application/json in this case.
  */
-invocation_response failure(char* error_message, char* error_type){
+invocation_response* failure(char* error_message, char* error_type){
     char* template = "{\"errorMessage\":\"%s\",\"errorType\":\"%s\", \"stackTrace\":[]}";
 
-    invocation_response r;
-    r.success = false;
-    r.content_type = "application/vnd.aws.lambda.error+json";
+    invocation_response* r = malloc(sizeof(invocation_response));
+    FAIL_IF(!r)
+    r->success = false;
+    SAFE_STRDUP(r->content_type,"application/vnd.aws.lambda.error+json")
 
     char *tmp_str = malloc(strlen(template) + strlen(error_message) + strlen(error_type) + 1);
+    FAIL_IF(!tmp_str)
     sprintf(tmp_str, template, error_message, error_type);
-    r.payload = tmp_str;
+    r->payload = tmp_str;
 
     return r;
 }
 
 // Entry method
-void run_handler(invocation_response (*handler)(invocation_request request)){
+void run_handler(handler_ptr handler){
     printf("Initializing the C Lambda Runtime version %s\n", get_version());
 
     service_logic_setup();
 
     invocation_request *req = NULL;
-    while((req = service_logic_get_next()) != NULL){
-        if(req){
-            printf("Invoking user handler\n");
-            invocation_response res =  handler(*req);
-            printf("Invoking user handler completed.\n");
-            printf("\tresponse payload: %s\n", res.payload);
+    invocation_response* res =  NULL;
+    while(service_logic_get_next(&req)){
+        printf("Invoking user handler\n");
+        handler(req, &res);
+        printf("Invoking user handler completed.\n");
+        printf("\tresponse payload: %s\n", res->payload);
 
-            service_logic_post_result(req->request_id, &res);
-            cleanup(req, &res);
-        }
+        service_logic_post_result(req, res);
+        cleanup(&req, &res);
     }
 
     service_logic_cleanup();
 
 }
 
-void cleanup(invocation_request *request, invocation_response *response){
+void cleanup(invocation_request **request, invocation_response **response){
     // freeing up dynamic allocated resources
-    if(request->payload)
-        free(request->payload);
-    if(request->request_id)
-        free(request->request_id);
-    if(request->xray_trace_id)
-        free(request->xray_trace_id);
-    if(request->client_context)
-        free(request->client_context);
-    if(request->cognito_identity)
-        free(request->cognito_identity);
-    if(request->function_arn)
-        free(request->function_arn);
-    free(request);
+    SAFE_FREE((*request)->payload);
+    SAFE_FREE((*request)->request_id);
+    SAFE_FREE((*request)->xray_trace_id);
+    SAFE_FREE((*request)->client_context);
+    SAFE_FREE((*request)->cognito_identity);
+    SAFE_FREE((*request)->function_arn);
+    SAFE_FREE(*request);
 
-    if(response->payload)
-        free(response->payload);
-    if(response->content_type)
-        free(response->content_type);
+    SAFE_FREE((*response)->payload);
+    SAFE_FREE((*response)->content_type);
+    SAFE_FREE((*response));
 }

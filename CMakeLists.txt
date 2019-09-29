@@ -12,6 +12,7 @@ add_library(${PROJECT_NAME}
         "src/string-builder.c"
         "src/hashmap.c"
         "src/response.c"
+        "src/utils.c"
         "${CMAKE_CURRENT_BINARY_DIR}/version.c"
 )
 
@@ -38,6 +39,7 @@ install(FILES
         "include/aws-lambda/ext/hashmap.h"
         "include/aws-lambda/http/response.h"
         "include/aws-lambda/http/service-integration.h"
+        "include/aws-lambda/c-runtime/utils.h"
         "include/aws-lambda/c-runtime/runtime.h"
         "include/aws-lambda/c-runtime/version.h"
         "include/aws-lambda/c-runtime/service-logic.h"
