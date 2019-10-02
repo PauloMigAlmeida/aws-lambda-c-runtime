@@ -24,8 +24,8 @@ void service_logic_setup(void);
 
 void service_logic_cleanup(void);
 
-invocation_request *service_logic_get_next(void);
+bool service_logic_get_next(invocation_request** req);
 
-void service_logic_post_result(char *request_id, invocation_response *response);
+void service_logic_post_result(invocation_request *request, invocation_response *response);
 
 #endif //AWS_LAMBDA_C_RUNTIME_SERVICE_LOGIC_H

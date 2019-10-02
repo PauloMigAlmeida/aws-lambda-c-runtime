@@ -130,6 +130,11 @@ And to invoke the function:
 $ aws lambda invoke --function-name demo --payload '{"my_cool_payload":"yay!"}' output.txt
 ```
 
+## Can I integrate it with the AWS SDK ?
+Yes, you can. However, as you might already know AWS doesn't offer a SDK in C language but does offer one in C++. 
+
+There are some examples on how to make this work in the [examples folder of this project](https://github.com/PauloMigAlmeida/aws-lambda-c-runtime/tree/master/examples/) =]
+
 ## Supported Compilers
 Any *fully* compliant C11 compiler targeting GNU/Linux x86-64 should work. Please avoid compiler versions that provide half-baked C11 support.
 

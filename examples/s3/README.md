@@ -41,7 +41,7 @@ The last step is to build the Lambda function in `main.c` and run the packaging 
 ```bash
 $ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=~/install
 $ make
-$ make make aws-lambda-package-s3-list-buckets
+$ make aws-lambda-package-s3-list-buckets
 ```
 
 You should now have a zip file called `s3-list-buckets.zip`. Follow the instructions in the main README to upload it and invoke the lambda.

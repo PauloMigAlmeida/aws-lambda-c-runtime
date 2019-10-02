@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "aws-lambda/ext/string-builder.h"
+#include "aws-lambda/c-runtime/utils.h"
 
 static const size_t str_builder_min_size = 32;
 
@@ -19,6 +20,7 @@ str_builder_t *str_builder_create(void) {
 
     sb = calloc(1, sizeof(*sb));
     sb->str = malloc(str_builder_min_size);
+    FAIL_IF(!sb->str)
     *sb->str = '\0';
     sb->alloced = str_builder_min_size;
     sb->len = 0;
@@ -29,8 +31,8 @@ str_builder_t *str_builder_create(void) {
 void str_builder_destroy(str_builder_t *sb) {
     if (sb == NULL)
         return;
-    free(sb->str);
-    free(sb);
+    SAFE_FREE(sb->str);
+    SAFE_FREE(sb);
 }
 
 /* - - - - */
@@ -150,6 +152,7 @@ char *str_builder_dump(const str_builder_t *sb, size_t *len) {
     if (len != NULL)
         *len = sb->len;
     out = malloc(sb->len + 1);
+    FAIL_IF(!out)
     memcpy(out, sb->str, sb->len + 1);
     return out;
 }

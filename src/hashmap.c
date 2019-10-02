@@ -2,6 +2,7 @@
  * Generic map implementation.
  */
 #include "aws-lambda/ext/hashmap.h"
+#include "aws-lambda/c-runtime/utils.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -247,7 +248,7 @@ int hashmap_rehash(map_t in) {
             return status;
     }
 
-    free(curr);
+    SAFE_FREE(curr);
 
     return MAP_OK;
 }
@@ -423,13 +424,13 @@ void hashmap_free(map_t in) {
             hashmap_element element = m->data[i];
             if (element.in_use != 0) {
                 hashmap_remove(m, element.key);
-                free(element.key);
-                free(element.data);
+                SAFE_FREE(element.key);
+                SAFE_FREE(element.data);
             }
         }
     }
-    free(m->data);
-    free(m);
+    SAFE_FREE(m->data);
+    SAFE_FREE(m);
 }
 
 /* Return the length of the hashmap */

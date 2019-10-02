@@ -25,7 +25,7 @@
 #include <aws/s3/S3Client.h>
 #include <aws/s3/model/Bucket.h>
 
-invocation_response list_buckets() {
+invocation_response* list_buckets() {
     std::string contentType ("text/plain; charset=utf-8");
     std::string ret("Your Amazon S3 buckets: ");
 
