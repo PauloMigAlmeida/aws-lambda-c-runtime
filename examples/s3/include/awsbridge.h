@@ -25,7 +25,7 @@ extern "C" {
 #include <stdio.h>
 #include <string.h>
 
-invocation_response list_buckets();
+invocation_response* list_buckets();
 
 #ifdef __cplusplus
 }

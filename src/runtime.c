@@ -65,7 +65,7 @@ void run_handler(handler_ptr handler){
     service_logic_setup();
 
     invocation_request *req = NULL;
-    invocation_response* res =  NULL;
+    invocation_response *res =  NULL;
     while(service_logic_get_next(&req)){
         printf("Invoking user handler\n");
         handler(req, &res);

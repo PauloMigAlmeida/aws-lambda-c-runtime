@@ -17,8 +17,8 @@
 #include "aws-lambda/c-runtime/runtime.h"
 #include "awsbridge.h"
 
-invocation_response my_handler(invocation_request request){
-    return list_buckets();
+void my_handler(invocation_request *request, invocation_response **response){
+    *response = list_buckets();
 }
 
 int main(void){
