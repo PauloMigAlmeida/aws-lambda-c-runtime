@@ -57,11 +57,11 @@ And here is how a sample `main.c` would look like:
 ```c
 #include "aws-lambda/c-runtime/runtime.h"
 
-invocation_response my_handler(invocation_request request){
+void my_handler(invocation_request *request, invocation_response **response){
     if(rand() == 42)
-        return failure("Something went wrong","Application-Error");
+        *response = failure("Hello World from AWS Lambda C Runtime","Application_Error");
     else
-        return success("All good","text/plain");     
+        *response = success("Hello World from AWS Lambda C Runtime","text/plain");  
 }
 
 int main(void){
