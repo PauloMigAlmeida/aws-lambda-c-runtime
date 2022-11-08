@@ -61,6 +61,8 @@ void set_default_curl_options(void) {
     curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
     curl_easy_setopt(curl, CURLOPT_TCP_NODELAY, 1L);
     curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+    /* enable if you want to debug */
+    // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 }
 
 void set_curl_next_options(void) {
@@ -184,7 +186,7 @@ post_result_outcome request_post_result(invocation_request *request, invocation_
         FAIL_IF(!content_type_h)
         strcpy(content_type_h, HTTP_HEADER_CONTENT_TYPE);
         strcat(content_type_h, response->content_type);
-        printf("content_type_h -> %s", content_type_h);
+        printf("content_type_h -> %s\n", content_type_h);
 
         headers = curl_slist_append(headers, content_type_h);
         headers = curl_slist_append(headers, get_user_agent_header());
@@ -205,6 +207,7 @@ post_result_outcome request_post_result(invocation_request *request, invocation_
         req_write.sizeleft = strlen(response->payload);
 
         curl_easy_setopt(curl, CURLOPT_READDATA, &req_write);
+	curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, (long)req_write.sizeleft);
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
         CURLcode curl_code = curl_easy_perform(curl);
         curl_slist_free_all(headers);
