@@ -30,12 +30,13 @@ Make sure you have the following packages installed first:
 
 In a terminal, run the following commands:
 ```bash
-$ git clone https://github.com/PauloMigAlmeida/aws-lambda-c-runtime.git
-$ cd aws-lambda-c-runtime
-$ mkdir build
-$ cd build
-$ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=~/lambda-install
-$ make && make install
+git clone https://github.com/PauloMigAlmeida/aws-lambda-c-runtime.git
+cd aws-lambda-c-runtime
+mkdir build
+cd build
+# GCC compiler optimisation breaks the runtime..Only use debug build type
+cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=~/lambda-install
+make && make install
 ```
 
 To consume this library in a project that is also using CMake, you would do:
@@ -144,7 +145,7 @@ Any *fully* compliant C11 compiler targeting GNU/Linux x86-64 should work. Pleas
 ## Packaging, ABI, GNU C Library, Oh My!
 Lambda runs your code on some version of Amazon Linux. It would be a less than ideal customer  experience if you are forced to build your application on that platform and that platform only.
 
-However, the freedom to build on any linux distro brings a challenge. The GNU C Library ABI. There is no guarantee the platform used to build the Lambda function has the same GLIBC version as the one used by AWS Lambda. In fact, you might not even be using GNU's implementation. For example you could build a C++ Lambda function using musl libc.
+However, the freedom to build on any linux distro brings a challenge. The GNU C Library ABI. There is no guarantee the platform used to build the Lambda function has the same GLIBC version as the one used by AWS Lambda. In fact, you might not even be using GNU's implementation. For example you could build a C Lambda function using musl libc.
 
 To ensure that your application will run correctly on Lambda, we must package the entire C runtime library with your function.
 If you choose to build on the same [Amazon Linux version used by lambda](https://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html), you can avoid packaging the C runtime in your zip file.
